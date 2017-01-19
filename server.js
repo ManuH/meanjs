@@ -5,7 +5,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose');
 
-//contains the environment if it set if not sets to development
+//contains the environment if set if not sets to development
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 //express app
@@ -40,7 +40,11 @@ app.use(express.static(__dirname + '/node_modules'));
 
 
 //mongo connection
-mongoose.connect('mongodb://localhost/multivision');
+if (env === 'development') {
+    mongoose.connect('mongodb://localhost/multivision');
+} else {
+    mongoose.connect('mongodb://manuhdb:multivisiondb@ds117849.mlab.com:17849/multivisiontrain');
+};
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error...'));
 db.once('open', function callback() {
@@ -68,6 +72,6 @@ app.get('*', function(req, res) {
 });
 
 //listen to requests
-var port = 3030;
+var port = process.env.PORT || 3030;
 app.listen(port);
 console.log("Listening on port " + port + '...');
