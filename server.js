@@ -51,24 +51,14 @@ db.once('open', function callback() {
     console.log('multivision db opened');
 });
 
-//call database
-var messageSchema = mongoose.Schema({message: String});
-var Message = mongoose.model('Message', messageSchema);
-var mongoMessage;
-Message.findOne().exec(function(err, messageDoc) {
-    mongoMessage = messageDoc.message;
-});
-
 //server side route for partials files
-app.get('/partials/:partialPath', function(req, res) {
-    res.render('partials/' + req.params.partialPath);
+app.get('/partials/*', function(req, res) {
+    res.render('../../public/app/' + req.params[0]);
 })
 
 //route that delivers the index page
 app.get('*', function(req, res) {
-    res.render('index', {
-        mongoMessage: mongoMessage
-    });
+    res.render('index');
 });
 
 //listen to requests
